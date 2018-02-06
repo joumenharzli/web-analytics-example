@@ -16,7 +16,7 @@ matrix:
     - language: java
       jdk: oraclejdk8
       script:
-        - ./mvnw test -B -q
+        - mvn test -B -q
       before_script:
         - cd ./shop-service/
 
