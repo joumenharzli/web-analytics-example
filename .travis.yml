@@ -11,14 +11,14 @@ addons:
     packages:
       - google-chrome-stable
 
-# matrix:
-#   include:
-#     - language: java
-#       jdk: oraclejdk8
-#       script:
-#         - ./mvnw test -B -q
-#       before_script:
-#         - cd ./backend/
+matrix:
+  include:
+    - language: java
+      jdk: oraclejdk8
+      script:
+        - ./mvnw test -B -q
+      before_script:
+        - cd ./shop-service/
 
 #     - language: node_js
 #       node_js: stable
