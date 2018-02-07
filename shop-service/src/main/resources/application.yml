@@ -23,6 +23,9 @@ application:
   cors:
     enabled: true
 
+  kafka:
+    bootstrap-servers: localhost:9002
+
   cache:
     enabled: true
     auto-discovery: false

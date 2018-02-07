@@ -15,10 +15,13 @@
 
 package com.github.joumenharzli.shop.config;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import com.google.common.collect.Lists;
 
 /**
  * Properties relative to the application
@@ -32,6 +35,7 @@ public class ApplicationProperties {
   private String name;
   private String version;
   private final SwaggerProperties swagger = new SwaggerProperties();
+  private final KafkaProperties kafka = new KafkaProperties();
   private final CorsProperties cors = new CorsProperties();
   private final LocalizationProperties localization = new LocalizationProperties();
   private final CacheProperties cache = new CacheProperties();
@@ -169,6 +173,19 @@ public class ApplicationProperties {
     }
   }
 
+  public static class KafkaProperties {
+
+    private List<String> bootstrapServers = Lists.newArrayList();
+
+    public List<String> getBootstrapServers() {
+      return bootstrapServers;
+    }
+
+    public void setBootstrapServers(List<String> bootstrapServers) {
+      this.bootstrapServers = bootstrapServers;
+    }
+  }
+
   public String getName() {
     return name;
   }
@@ -199,5 +216,9 @@ public class ApplicationProperties {
 
   public CacheProperties getCache() {
     return cache;
+  }
+
+  public KafkaProperties getKafka() {
+    return kafka;
   }
 }
