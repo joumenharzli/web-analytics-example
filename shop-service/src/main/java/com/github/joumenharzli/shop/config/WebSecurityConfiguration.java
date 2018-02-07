@@ -57,7 +57,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.cors()
         .and()
         .csrf()
-        .disable();
+        .disable()
+        .authorizeRequests()
+        .antMatchers("/api/**").permitAll();
 
     if (applicationProperties.getSwagger().isEnabled()) {
       http.authorizeRequests()
