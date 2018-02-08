@@ -18,6 +18,7 @@ package com.github.joumenharzli.shop.service.dto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.github.joumenharzli.shop.domain.Shop;
 
@@ -28,23 +29,25 @@ import com.github.joumenharzli.shop.domain.Shop;
  */
 public class ShopDTO {
 
-  private long shopId;
-  private String shopName;
+  private long id;
 
-  public long getShopId() {
-    return shopId;
+  @NotBlank
+  private String name;
+
+  public long getId() {
+    return id;
   }
 
-  public void setShopId(long shopId) {
-    this.shopId = shopId;
+  public void setId(long id) {
+    this.id = id;
   }
 
-  public String getShopName() {
-    return shopName;
+  public String getName() {
+    return name;
   }
 
-  public void setShopName(String shopName) {
-    this.shopName = shopName;
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
@@ -60,22 +63,22 @@ public class ShopDTO {
     ShopDTO shopDTO = (ShopDTO) o;
 
     return new EqualsBuilder()
-        .append(shopId, shopDTO.shopId)
+        .append(id, shopDTO.id)
         .isEquals();
   }
 
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
-        .append(shopId)
+        .append(id)
         .toHashCode();
   }
 
   @Override
   public String toString() {
     return new ToStringBuilder(this)
-        .append("shopId", shopId)
-        .append("shopName", shopName)
+        .append("id", id)
+        .append("name", name)
         .toString();
   }
 }
