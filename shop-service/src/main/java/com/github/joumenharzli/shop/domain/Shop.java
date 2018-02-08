@@ -22,6 +22,7 @@ import javax.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -31,6 +32,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * @author Joumen Harzli
  */
 @Entity
+@Table(name = "shops")
 @Cacheable
 public class Shop implements Serializable {
 
@@ -38,6 +40,8 @@ public class Shop implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private long id;
 
+  @NotBlank
+  @Column(name = "name")
   private String name;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "shop")

@@ -19,6 +19,7 @@ import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Product entity
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @author Joumen Harzli
  */
 @Entity
+@Table(name = "products")
 @Cacheable
 public class Product {
 
@@ -33,6 +35,8 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private long id;
 
+  @NotBlank
+  @Column(name = "name")
   private String name;
 
   @ManyToOne(fetch = FetchType.LAZY)
