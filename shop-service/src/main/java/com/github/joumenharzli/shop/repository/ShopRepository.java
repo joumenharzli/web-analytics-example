@@ -16,6 +16,7 @@
 package com.github.joumenharzli.shop.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.github.joumenharzli.shop.domain.Shop;
 
@@ -24,5 +25,6 @@ import com.github.joumenharzli.shop.domain.Shop;
  *
  * @author Joumen Harzli
  */
+@Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
 }

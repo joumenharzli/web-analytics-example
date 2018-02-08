@@ -22,6 +22,8 @@ import javax.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotBlank;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -33,7 +35,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 @Entity
 @Table(name = "shops")
-@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Shop implements Serializable {
 
   @Id

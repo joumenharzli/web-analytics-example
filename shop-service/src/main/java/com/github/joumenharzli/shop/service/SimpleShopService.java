@@ -51,6 +51,7 @@ public class SimpleShopService implements ShopService {
    * @return list of DTOs of the shops
    */
   @Override
+  @Transactional(readOnly = true)
   public List<ShopDTO> findAll() {
     LOGGER.debug("Request to get all the shops without their products");
     return shopMapper.toDtos(shopRepository.findAll());
