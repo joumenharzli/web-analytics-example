@@ -18,7 +18,6 @@ package com.github.joumenharzli.shop.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
 
 import com.github.joumenharzli.shop.domain.Shop;
 import com.github.joumenharzli.shop.service.dto.ShopDTO;
@@ -28,7 +27,6 @@ import com.github.joumenharzli.shop.service.dto.ShopDTO;
  *
  * @author Joumen Harzli
  */
-@Component
 @Mapper(componentModel = "spring")
 public interface ShopMapper {
 
