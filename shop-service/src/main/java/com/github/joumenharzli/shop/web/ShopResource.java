@@ -17,7 +17,6 @@ package com.github.joumenharzli.shop.web;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +30,11 @@ import com.github.joumenharzli.shop.service.ProductService;
 import com.github.joumenharzli.shop.service.ShopService;
 import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 import com.github.joumenharzli.shop.service.dto.ShopDTO;
+import com.github.joumenharzli.shop.web.error.RestErrorDto;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * REST resource for the entity {@link Shop}
@@ -78,9 +80,12 @@ public class ShopResource {
   @ApiOperation(notes = "Returns all the found products that belongs to the the specified shop using the id of the shop.",
       value = "Get all the products that belongs to the the specified shop",
       nickname = "getAllProductsByShopId")
+  @ApiResponses({
+      @ApiResponse(code = 404, message = "Shop not found", response = RestErrorDto.class),
+  })
   @Timed
   @GetMapping("/shops/{id}/products")
-  public List<ProductSmallDTO> getAllProductsByShopId(@PathVariable("id") @NotBlank String shopId) {
+  public List<ProductSmallDTO> getAllProductsByShopId(@PathVariable("id") String shopId) {
     LOGGER.debug("REST request to get all the products that belongs to the shop having the id {}", shopId);
     return productService.findAllProductsByShopId(shopId);
   }

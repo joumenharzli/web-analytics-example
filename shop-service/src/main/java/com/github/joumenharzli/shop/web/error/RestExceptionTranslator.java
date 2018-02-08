@@ -17,6 +17,8 @@ package com.github.joumenharzli.shop.web.error;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,8 @@ import com.github.joumenharzli.shop.exception.ShopNotFoundException;
 @ControllerAdvice
 public class RestExceptionTranslator {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionTranslator.class);
+
   private final MessageSource messageSource;
 
   public RestExceptionTranslator(MessageSource messageSource) {
@@ -54,7 +58,8 @@ public class RestExceptionTranslator {
   @ResponseBody
   public RestErrorDto handleShopNotFound(ShopNotFoundException exception) {
     String errorCode = RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR;
-    return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode, new Object[]{exception.getShopId()}));
+    LOGGER.error("Resolved error with code {}", errorCode, exception);
+    return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }
 
   /**
@@ -69,6 +74,7 @@ public class RestExceptionTranslator {
     BindingResult result = exception.getBindingResult();
 
     String errorCode = RestErrorConstants.ERR_VALIDATION_ERROR;
+    LOGGER.error("Resolved error with code {}", errorCode, exception);
 
     RestFieldsErrorsDto restFieldsErrors = new RestFieldsErrorsDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
 
@@ -89,8 +95,10 @@ public class RestExceptionTranslator {
   @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(value = Exception.class)
   @ResponseBody
-  public RestErrorDto handleAllExceptions() {
+  public RestErrorDto handleAllExceptions(Exception exception) {
     String errorCode = RestErrorConstants.ERR_INTERNAL_SERVER_ERROR;
+    LOGGER.error("Resolved error with code {}", errorCode, exception);
+
     return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }
 

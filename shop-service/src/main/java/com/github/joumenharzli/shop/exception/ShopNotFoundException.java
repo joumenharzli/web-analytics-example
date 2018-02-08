@@ -15,16 +15,12 @@
 
 package com.github.joumenharzli.shop.exception;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * ShopNotFoundException
  *
  * @author Joumen Harzli
  */
 public class ShopNotFoundException extends RuntimeException {
-
-  private long shopId;
 
   /**
    * Constructs a new runtime exception with the specified detail message.
@@ -38,19 +34,4 @@ public class ShopNotFoundException extends RuntimeException {
     super(message);
   }
 
-  public long getShopId() {
-    return shopId;
-  }
-
-  public void setShopId(long shopId) {
-    this.shopId = shopId;
-  }
-
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this)
-        .append("message", super.toString())
-        .append("shopId", shopId)
-        .toString();
-  }
 }
