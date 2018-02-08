@@ -13,56 +13,40 @@
  *
  */
 
-package com.github.joumenharzli.shop.domain;
+package com.github.joumenharzli.shop.service.dto;
 
-import java.util.UUID;
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.github.joumenharzli.shop.domain.Product;
+
 /**
- * Product entity
+ * DTO for the entity {@link Product} without the shop
  *
  * @author Joumen Harzli
  */
-@Entity
-@Table(name = "products")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Product {
+public class ProductDTO {
 
-  @GeneratedValue(generator = "uuid2")
-  @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @Column(columnDefinition = "BINARY(16)")
-  @Id
-  private UUID id;
+  private String id;
 
   @NotBlank
-  @Column(name = "name")
   private String name;
 
   @NotNull
-  @Column(name = "price")
   private Float price;
 
   @NotNull
-  @Column(name = "quantity")
   private Long quantity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shop_id")
-  private Shop shop;
-
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -90,14 +74,6 @@ public class Product {
     this.quantity = quantity;
   }
 
-  public Shop getShop() {
-    return shop;
-  }
-
-  public void setShop(Shop shop) {
-    this.shop = shop;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -108,12 +84,10 @@ public class Product {
       return false;
     }
 
-    Product product = (Product) o;
+    ProductDTO shopDTO = (ProductDTO) o;
 
     return new EqualsBuilder()
-        .append(id, product.id)
-        .append(name, product.name)
-        .append(shop, product.shop)
+        .append(id, shopDTO.id)
         .isEquals();
   }
 
@@ -121,8 +95,16 @@ public class Product {
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
         .append(id)
-        .append(name)
-        .append(shop)
         .toHashCode();
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+        .append("id", id)
+        .append("name", name)
+        .append("price", price)
+        .append("quantity", quantity)
+        .toString();
   }
 }

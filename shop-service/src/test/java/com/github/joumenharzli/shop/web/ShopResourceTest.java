@@ -15,7 +15,10 @@
 
 package com.github.joumenharzli.shop.web;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +29,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.github.joumenharzli.shop.ShopApplication;
+import com.github.joumenharzli.shop.domain.Product;
 import com.github.joumenharzli.shop.domain.Shop;
+import com.github.joumenharzli.shop.domain.builder.ProductBuilder;
+import com.github.joumenharzli.shop.domain.builder.ShopBuilder;
+import com.github.joumenharzli.shop.repository.ProductRepository;
 import com.github.joumenharzli.shop.repository.ShopRepository;
+import com.github.joumenharzli.shop.web.error.RestErrorConstants;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -51,18 +59,68 @@ public class ShopResourceTest {
   @Autowired
   private ShopRepository shopRepository;
 
+  @Autowired
+  private ProductRepository productRepository;
+
+  @Before
+  public void setUp() {
+    productRepository.deleteAll();
+    shopRepository.deleteAll();
+  }
+
   @Test
-//  @Transactional
   public void shouldGetAllShops() throws Exception {
-    String shopName = RandomStringUtils.randomAlphanumeric(5);
-    Shop shop = new Shop();
-    shop.setName(shopName);
-    shopRepository.saveAndFlush(shop);
+    Shop shop = createShop();
 
     mockMvc.perform(get("/api/v1/shops")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(200))
-        .andExpect(jsonPath("$[0].name").value(is(shopName)))
+        .andExpect(jsonPath("$[0].id").value(is(shop.getId().toString())))
+        .andExpect(jsonPath("$[0].name").value(is(shop.getName())))
         .andExpect(jsonPath("$", hasSize(1)));
+  }
+
+  @Test
+  public void shouldGetAllProductsByShopId() throws Exception {
+    Shop shop = createShop();
+    Product product = createProduct(shop);
+
+    mockMvc.perform(get("/api/v1/shops/{id}/products", shop.getId())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(200))
+        .andExpect(jsonPath("$[0].id").value(is(product.getId().toString())))
+        .andExpect(jsonPath("$[0].name").value(is(product.getName())))
+        .andExpect(jsonPath("$", hasSize(1)));
+  }
+
+  @Test
+  public void shouldNotGetAllProductsByShopId() throws Exception {
+    mockMvc.perform(get("/api/v1/shops/{id}/products", UUID.randomUUID().toString())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(404))
+        .andExpect(jsonPath("$.code").value(is(RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR)));
+  }
+
+  private Shop createShop() {
+    //@formatter:off
+    Shop shop = ShopBuilder.aShop()
+                           .withName(RandomStringUtils.randomAlphanumeric(5))
+                           .build();
+    //@formatter:on
+
+    return shopRepository.saveAndFlush(shop);
+  }
+
+  private Product createProduct(Shop shop) {
+    //@formatter:off
+    Product product = ProductBuilder.aProduct()
+                                    .withName(RandomStringUtils.randomAlphanumeric(5))
+                                    .withPrice(Float.valueOf(RandomStringUtils.randomNumeric(5)))
+                                    .withQuantity(Long.valueOf(RandomStringUtils.randomNumeric(5)))
+                                    .withShop(shop)
+                                    .build();
+    //@formatter:on
+
+    return productRepository.saveAndFlush(product);
   }
 }

@@ -13,19 +13,25 @@
  *
  */
 
-package com.github.joumenharzli.shop.web.error;
+package com.github.joumenharzli.shop.repository;
+
+import java.util.UUID;
+
+import com.github.joumenharzli.shop.domain.Shop;
 
 /**
- * Constants for rest error
+ * Custom Repository for the entity {@link Shop}
  *
  * @author Joumen Harzli
  */
-public final class RestErrorConstants {
+public interface CustomShopRepository {
 
-  public static final String ERR_INTERNAL_SERVER_ERROR = "error.internal";
-  public static final String ERR_VALIDATION_ERROR = "error.validation";
-  public static final String ERR_SHOP_NOT_FOUND_ERROR = "error.shopNotFound";
+  /**
+   * Check if the shop entity exists
+   *
+   * @param id entity id
+   * @return true if it exists and false if not
+   */
+  boolean exists(UUID id);
 
-  private RestErrorConstants() {
-  }
 }

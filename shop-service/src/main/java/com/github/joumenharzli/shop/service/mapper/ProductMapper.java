@@ -13,19 +13,27 @@
  *
  */
 
-package com.github.joumenharzli.shop.web.error;
+package com.github.joumenharzli.shop.service.mapper;
+
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 
 /**
- * Constants for rest error
+ * ProductMapper
  *
  * @author Joumen Harzli
  */
-public final class RestErrorConstants {
+@Mapper(componentModel = "spring")
+public interface ProductMapper {
 
-  public static final String ERR_INTERNAL_SERVER_ERROR = "error.internal";
-  public static final String ERR_VALIDATION_ERROR = "error.validation";
-  public static final String ERR_SHOP_NOT_FOUND_ERROR = "error.shopNotFound";
+  @Mapping(target = "id", expression = "java( product.getId().toString() )")
+  ProductSmallDTO toSmallDto(Product product);
 
-  private RestErrorConstants() {
-  }
+  List<ProductSmallDTO> toSmallDtos(List<Product> products);
+
 }

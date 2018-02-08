@@ -17,15 +17,19 @@ package com.github.joumenharzli.shop.web;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.github.joumenharzli.shop.domain.Shop;
+import com.github.joumenharzli.shop.service.ProductService;
 import com.github.joumenharzli.shop.service.ShopService;
+import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 import com.github.joumenharzli.shop.service.dto.ShopDTO;
 
 import io.swagger.annotations.ApiOperation;
@@ -36,15 +40,17 @@ import io.swagger.annotations.ApiOperation;
  * @author Joumen Harzli
  */
 @RestController
-@RequestMapping("/api/v1/shops")
+@RequestMapping("/api/v1")
 public class ShopResource {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ShopResource.class);
 
   private final ShopService shopService;
+  private final ProductService productService;
 
-  public ShopResource(ShopService shopService) {
+  public ShopResource(ShopService shopService, ProductService productService) {
     this.shopService = shopService;
+    this.productService = productService;
   }
 
   /**
@@ -56,10 +62,27 @@ public class ShopResource {
       value = "Get all shops and questions without their products",
       nickname = "getAllShops")
   @Timed
-  @GetMapping
+  @GetMapping("/shops")
   public List<ShopDTO> getAllShops() {
     LOGGER.debug("REST request to get all the shops without their products");
     return shopService.findAll();
+  }
+
+  /**
+   * GET  /shops/:id/products : get all the products that belongs to the the specified shop.
+   *
+   * @return the ResponseEntity with status 200 (OK) and the list of the products that belongs to the the specified shop
+   * or with status 404 (Not Found) if the shop was not found
+   * or with status 400 (Bad Request) if the id is not valid
+   */
+  @ApiOperation(notes = "Returns all the found products that belongs to the the specified shop using the id of the shop.",
+      value = "Get all the products that belongs to the the specified shop",
+      nickname = "getAllProductsByShopId")
+  @Timed
+  @GetMapping("/shops/{id}/products")
+  public List<ProductSmallDTO> getAllProductsByShopId(@PathVariable("id") @NotBlank String shopId) {
+    LOGGER.debug("REST request to get all the products that belongs to the shop having the id {}", shopId);
+    return productService.findAllProductsByShopId(shopId);
   }
 
 }

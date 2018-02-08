@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.github.joumenharzli.shop.exception.ShopNotFoundException;
+
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
  *
@@ -40,6 +42,19 @@ public class RestExceptionTranslator {
 
   public RestExceptionTranslator(MessageSource messageSource) {
     this.messageSource = messageSource;
+  }
+
+  /**
+   * Handle Shop Not Found
+   *
+   * @return 404 status with message telling that the Shop not found
+   */
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  @ExceptionHandler(value = ShopNotFoundException.class)
+  @ResponseBody
+  public RestErrorDto handleShopNotFound(ShopNotFoundException exception) {
+    String errorCode = RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR;
+    return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode, new Object[]{exception.getShopId()}));
   }
 
   /**

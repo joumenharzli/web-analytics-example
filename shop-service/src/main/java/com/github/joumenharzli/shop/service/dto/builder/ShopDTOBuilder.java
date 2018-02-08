@@ -13,19 +13,37 @@
  *
  */
 
-package com.github.joumenharzli.shop.web.error;
+package com.github.joumenharzli.shop.service.dto.builder;
+
+import com.github.joumenharzli.shop.service.dto.ShopDTO;
 
 /**
- * Constants for rest error
+ * ShopDTOBuilder
  *
  * @author Joumen Harzli
  */
-public final class RestErrorConstants {
+public final class ShopDTOBuilder {
+  private ShopDTO shopDTO;
 
-  public static final String ERR_INTERNAL_SERVER_ERROR = "error.internal";
-  public static final String ERR_VALIDATION_ERROR = "error.validation";
-  public static final String ERR_SHOP_NOT_FOUND_ERROR = "error.shopNotFound";
+  private ShopDTOBuilder() {
+    shopDTO = new ShopDTO();
+  }
 
-  private RestErrorConstants() {
+  public static ShopDTOBuilder aShopDTO() {
+    return new ShopDTOBuilder();
+  }
+
+  public ShopDTOBuilder withId(String id) {
+    shopDTO.setId(id);
+    return this;
+  }
+
+  public ShopDTOBuilder withName(String name) {
+    shopDTO.setName(name);
+    return this;
+  }
+
+  public ShopDTO build() {
+    return shopDTO;
   }
 }
