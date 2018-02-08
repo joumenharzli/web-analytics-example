@@ -15,21 +15,22 @@
 
 package com.github.joumenharzli.shop.web;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.github.joumenharzli.shop.config.ApplicationProperties;
-import com.github.joumenharzli.shop.config.WebSecurityConfiguration;
-import com.github.joumenharzli.shop.service.ShopService;
+import com.github.joumenharzli.shop.ShopApplication;
+import com.github.joumenharzli.shop.domain.Shop;
+import com.github.joumenharzli.shop.repository.ShopRepository;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,21 +41,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Joumen Harzli
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = ShopResource.class)
-@Import({WebSecurityConfiguration.class, ApplicationProperties.class})
+@SpringBootTest(classes = ShopApplication.class)
+@AutoConfigureMockMvc
 public class ShopResourceTest {
 
   @Autowired
-  MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-  @MockBean
-  ShopService shopService;
+  @Autowired
+  private ShopRepository shopRepository;
 
   @Test
+//  @Transactional
   public void shouldGetAllShops() throws Exception {
+    String shopName = RandomStringUtils.randomAlphanumeric(5);
+    Shop shop = new Shop();
+    shop.setName(shopName);
+    shopRepository.saveAndFlush(shop);
+
     mockMvc.perform(get("/api/v1/shops")
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(200))
-        .andExpect(jsonPath("$", hasSize(0)));
+        .andExpect(jsonPath("$[0].name").value(is(shopName)))
+        .andExpect(jsonPath("$", hasSize(1)));
   }
 }
