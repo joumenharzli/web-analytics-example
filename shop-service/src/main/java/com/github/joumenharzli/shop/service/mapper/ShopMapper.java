@@ -18,6 +18,7 @@ package com.github.joumenharzli.shop.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.github.joumenharzli.shop.domain.Shop;
 import com.github.joumenharzli.shop.service.dto.ShopDTO;
@@ -30,6 +31,7 @@ import com.github.joumenharzli.shop.service.dto.ShopDTO;
 @Mapper(componentModel = "spring")
 public interface ShopMapper {
 
+  @Mapping(target = "id", expression = "java( shop.getId().toString() )")
   ShopDTO toDto(Shop shop);
 
   List<ShopDTO> toDtos(List<Shop> shops);

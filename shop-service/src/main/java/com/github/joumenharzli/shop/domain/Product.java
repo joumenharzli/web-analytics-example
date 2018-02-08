@@ -15,12 +15,14 @@
 
 package com.github.joumenharzli.shop.domain;
 
+import java.util.UUID;
 import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -33,9 +35,11 @@ import org.hibernate.validator.constraints.NotBlank;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Product {
 
+  @GeneratedValue(generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @Column(columnDefinition = "BINARY(16)")
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private long id;
+  private UUID id;
 
   @NotBlank
   @Column(name = "name")
@@ -45,11 +49,11 @@ public class Product {
   @JoinColumn(name = "shop_id")
   private Shop shop;
 
-  public long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

@@ -17,6 +17,7 @@ package com.github.joumenharzli.shop.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -38,9 +40,11 @@ import static com.google.common.collect.Lists.newArrayList;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Shop implements Serializable {
 
+  @GeneratedValue(generator = "uuid2")
+  @GenericGenerator(name = "uuid2", strategy = "uuid2")
+  @Column(columnDefinition = "BINARY(16)")
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private long id;
+  private UUID id;
 
   @NotBlank
   @Column(name = "name")
@@ -53,11 +57,11 @@ public class Shop implements Serializable {
     this.products = newArrayList();
   }
 
-  public long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
