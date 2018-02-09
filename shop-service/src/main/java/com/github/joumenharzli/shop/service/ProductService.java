@@ -18,7 +18,9 @@ package com.github.joumenharzli.shop.service;
 import java.util.List;
 
 import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.exception.ShopNotFoundException;
+import com.github.joumenharzli.shop.service.dto.ProductDTO;
 import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 
 /**
@@ -38,4 +40,13 @@ public interface ProductService {
    */
   List<ProductSmallDTO> findAllProductsByShopId(String shopId);
 
+  /**
+   * Find product by his id
+   *
+   * @param productId id of the product
+   * @return the found product
+   * @throws ProductNotFoundException if the product was not found
+   * @throws IllegalArgumentException if any given argument is invalid
+   */
+  ProductDTO findOneById(String productId);
 }

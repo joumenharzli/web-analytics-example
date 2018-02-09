@@ -26,9 +26,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.exception.ShopNotFoundException;
 import com.github.joumenharzli.shop.repository.CustomShopRepository;
 import com.github.joumenharzli.shop.repository.ProductRepository;
+import com.github.joumenharzli.shop.service.dto.ProductDTO;
 import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 import com.github.joumenharzli.shop.service.dto.builder.ProductSmallDTOBuilder;
 import com.github.joumenharzli.shop.service.mapper.ProductMapper;
@@ -74,6 +77,29 @@ public class SimpleProductService implements ProductService {
 
     List<Tuple> products = productRepository.findAllByShopIdProjectedInTuple(UUID.fromString(shopId));
     return products.stream().map(this::tupleToProductSmallDTO).collect(Collectors.toList());
+  }
+
+  /**
+   * Find product by his id
+   *
+   * @param productId id of the product
+   * @return the found product
+   * @throws ProductNotFoundException if the product was not found
+   * @throws IllegalArgumentException if any given argument is invalid
+   */
+  @Override
+  @Transactional(readOnly = true)
+  public ProductDTO findOneById(String productId) {
+    LOGGER.debug("Request to get the product having the id {}", productId);
+
+    Assert.hasText(productId, "id of the product cannot be null/blank");
+
+    Product product = productRepository.findOne(UUID.fromString(productId));
+    if (product == null) {
+      throw new ProductNotFoundException("The product with id " + productId + " was not found");
+    }
+
+    return productMapper.toDto(product);
   }
 
   /**

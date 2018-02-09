@@ -13,20 +13,25 @@
  *
  */
 
-package com.github.joumenharzli.shop.web.error;
+package com.github.joumenharzli.shop.exception;
 
 /**
- * Constants for rest error
+ * Product Not Found Exception
  *
  * @author Joumen Harzli
  */
-public final class RestErrorConstants {
+public class ProductNotFoundException extends RuntimeException {
 
-  public static final String ERR_INTERNAL_SERVER_ERROR = "error.internal";
-  public static final String ERR_VALIDATION_ERROR = "error.validation";
-  public static final String ERR_SHOP_NOT_FOUND_ERROR = "error.shopNotFound";
-  public static final String ERR_PRODUCT_NOT_FOUND_ERROR = "error.productNotFound";
-
-  private RestErrorConstants() {
+  /**
+   * Constructs a new runtime exception with the specified detail message.
+   * The cause is not initialized, and may subsequently be initialized by a
+   * call to {@link #initCause}.
+   *
+   * @param message the detail message. The detail message is saved for
+   *                later retrieval by the {@link #getMessage()} method.
+   */
+  public ProductNotFoundException(String message) {
+    super(message);
   }
+
 }

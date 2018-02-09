@@ -21,6 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.service.dto.ProductDTO;
 import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 
 /**
@@ -30,6 +31,11 @@ import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
  */
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+
+  @Mapping(target = "id", expression = "java( product.getId().toString() )")
+  ProductDTO toDto(Product product);
+
+  List<ProductDTO> toDtos(List<Product> products);
 
   @Mapping(target = "id", expression = "java( product.getId().toString() )")
   ProductSmallDTO toSmallDto(Product product);

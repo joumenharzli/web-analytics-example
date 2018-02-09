@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.exception.ShopNotFoundException;
 
 /**
@@ -41,11 +42,26 @@ import com.github.joumenharzli.shop.exception.ShopNotFoundException;
 public class RestExceptionTranslator {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionTranslator.class);
+  private static final String ERROR_MSG = "Resolved error with code {}";
 
   private final MessageSource messageSource;
 
   public RestExceptionTranslator(MessageSource messageSource) {
     this.messageSource = messageSource;
+  }
+
+  /**
+   * Handle Product Not Found
+   *
+   * @return 404 status with message telling that the Product not found
+   */
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  @ExceptionHandler(value = ProductNotFoundException.class)
+  @ResponseBody
+  public RestErrorDto handleProductNotFound(ProductNotFoundException exception) {
+    String errorCode = RestErrorConstants.ERR_PRODUCT_NOT_FOUND_ERROR;
+    LOGGER.error(ERROR_MSG, errorCode, exception);
+    return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }
 
   /**
@@ -58,7 +74,7 @@ public class RestExceptionTranslator {
   @ResponseBody
   public RestErrorDto handleShopNotFound(ShopNotFoundException exception) {
     String errorCode = RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR;
-    LOGGER.error("Resolved error with code {}", errorCode, exception);
+    LOGGER.error(ERROR_MSG, errorCode, exception);
     return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }
 
@@ -74,7 +90,7 @@ public class RestExceptionTranslator {
     BindingResult result = exception.getBindingResult();
 
     String errorCode = RestErrorConstants.ERR_VALIDATION_ERROR;
-    LOGGER.error("Resolved error with code {}", errorCode, exception);
+    LOGGER.error(ERROR_MSG, errorCode, exception);
 
     RestFieldsErrorsDto restFieldsErrors = new RestFieldsErrorsDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
 
@@ -97,7 +113,7 @@ public class RestExceptionTranslator {
   @ResponseBody
   public RestErrorDto handleAllExceptions(Exception exception) {
     String errorCode = RestErrorConstants.ERR_INTERNAL_SERVER_ERROR;
-    LOGGER.error("Resolved error with code {}", errorCode, exception);
+    LOGGER.error(ERROR_MSG, errorCode, exception);
 
     return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }

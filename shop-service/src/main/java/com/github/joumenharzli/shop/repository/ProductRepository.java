@@ -32,7 +32,7 @@ import com.github.joumenharzli.shop.domain.Product;
  * @author Joumen Harzli
  */
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, UUID> {
 
   @Query("SELECT p.id AS id, p.name AS name from Product p where p.shop.id = :shopid")
   List<Tuple> findAllByShopIdProjectedInTuple(@Param("shopid") UUID shopId);

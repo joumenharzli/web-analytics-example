@@ -30,27 +30,26 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.github.joumenharzli.shop.ShopApplication;
 import com.github.joumenharzli.shop.domain.Product;
 import com.github.joumenharzli.shop.domain.Shop;
-import com.github.joumenharzli.shop.domain.builder.ShopBuilder;
+import com.github.joumenharzli.shop.domain.builder.ProductBuilder;
 import com.github.joumenharzli.shop.repository.ProductRepository;
 import com.github.joumenharzli.shop.repository.ShopRepository;
 import com.github.joumenharzli.shop.web.error.RestErrorConstants;
 
-import static com.github.joumenharzli.shop.web.ProductResourceTest.createProduct;
-import static org.hamcrest.Matchers.hasItem;
+import static com.github.joumenharzli.shop.web.ShopResourceTest.createShop;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Integration Test for the REST resource {@link ShopResource}
+ * Integration Test for the REST resource {@link ProductResource}
  *
  * @author Joumen Harzli
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShopApplication.class)
 @AutoConfigureMockMvc
-public class ShopResourceTest {
+public class ProductResourceTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -61,45 +60,40 @@ public class ShopResourceTest {
   @Autowired
   private ProductRepository productRepository;
 
-  public static Shop createShop(ShopRepository shopRepository) {
+  public static Product createProduct(Shop shop, ProductRepository productRepository) {
     //@formatter:off
-    Shop shop = ShopBuilder.aShop()
-                           .withName(RandomStringUtils.randomAlphanumeric(5))
-                           .build();
+    Product product = ProductBuilder.aProduct()
+                                    .withName(RandomStringUtils.randomAlphanumeric(5))
+                                    .withPrice(Float.valueOf(RandomStringUtils.randomNumeric(5)))
+                                    .withQuantity(Long.valueOf(RandomStringUtils.randomNumeric(5)))
+                                    .withShop(shop)
+                                    .build();
     //@formatter:on
 
-    return shopRepository.saveAndFlush(shop);
+    return productRepository.saveAndFlush(product);
   }
 
   @Test
-  public void shouldGetAllShops() throws Exception {
-    Shop shop = createShop(shopRepository);
-
-    mockMvc.perform(get("/api/v1/shops")
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().is(200))
-        .andExpect(jsonPath("$.[*].id").value(hasItem(shop.getId().toString())))
-        .andExpect(jsonPath("$.[*].name").value(hasItem(shop.getName())));
-  }
-
-  @Test
-  public void shouldGetAllProductsByShopId() throws Exception {
+  public void shouldGetProductById() throws Exception {
     Shop shop = createShop(shopRepository);
     Product product = createProduct(shop, productRepository);
 
-    mockMvc.perform(get("/api/v1/shops/{id}/products", shop.getId())
+    mockMvc.perform(get("/api/v1/products/{id}", product.getId())
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(200))
-        .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().toString())))
-        .andExpect(jsonPath("$.[*].name").value(hasItem(product.getName())));
+        .andExpect(jsonPath("$.id").value(product.getId().toString()))
+        .andExpect(jsonPath("$.name").value(product.getName()))
+        .andExpect(jsonPath("$.price").value(product.getPrice().toString()))
+        .andExpect(jsonPath("$.quantity").value(product.getQuantity().toString()));
   }
 
   @Test
-  public void shouldNotGetAllProductsByShopId() throws Exception {
-    mockMvc.perform(get("/api/v1/shops/{id}/products", UUID.randomUUID().toString())
+  public void shouldNotGetProductById() throws Exception {
+    mockMvc.perform(get("/api/v1/products/{id}", UUID.randomUUID().toString())
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(404))
-        .andExpect(jsonPath("$.code").value(is(RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR)));
+        .andExpect(jsonPath("$.code").value(is(RestErrorConstants.ERR_PRODUCT_NOT_FOUND_ERROR)));
   }
+
 
 }
