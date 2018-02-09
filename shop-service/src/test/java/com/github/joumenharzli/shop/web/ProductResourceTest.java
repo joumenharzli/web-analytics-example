@@ -31,12 +31,11 @@ import com.github.joumenharzli.shop.ShopApplication;
 import com.github.joumenharzli.shop.domain.Product;
 import com.github.joumenharzli.shop.domain.Shop;
 import com.github.joumenharzli.shop.domain.builder.ProductBuilder;
+import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.repository.ProductRepository;
 import com.github.joumenharzli.shop.repository.ShopRepository;
-import com.github.joumenharzli.shop.web.error.RestErrorConstants;
 
 import static com.github.joumenharzli.shop.web.ShopResourceTest.createShop;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,7 +91,7 @@ public class ProductResourceTest {
     mockMvc.perform(get("/api/v1/products/{id}", UUID.randomUUID().toString())
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(404))
-        .andExpect(jsonPath("$.code").value(is(RestErrorConstants.ERR_PRODUCT_NOT_FOUND_ERROR)));
+        .andExpect(jsonPath("$.code").value(ProductNotFoundException.ERROR_CODE));
   }
 
 

@@ -16,14 +16,14 @@
 package com.github.joumenharzli.shop.exception;
 
 /**
- * Product Not Found Exception
+ * A generic exception for modeling the entity not found exception
  *
  * @author Joumen Harzli
  */
-public class ProductNotFoundException extends EntityNotFoundException {
+public class EntityNotFoundException extends RuntimeException {
 
-  /* The error code for representing a product that was not found */
-  public static final String ERROR_CODE = "error.productNotFound";
+  /* The default error code for representing an entity that was not found */
+  public static final String ERROR_CODE = "error.entityNotFound";
 
   /**
    * Constructs a new runtime exception with the specified detail message.
@@ -33,15 +33,15 @@ public class ProductNotFoundException extends EntityNotFoundException {
    * @param message the detail message. The detail message is saved for
    *                later retrieval by the {@link #getMessage()} method.
    */
-  public ProductNotFoundException(String message) {
+  public EntityNotFoundException(String message) {
     super(message);
   }
 
   /**
    * @return the error code of the exception
    */
-  @Override
   public String getErrorCode() {
     return ERROR_CODE;
   }
+
 }

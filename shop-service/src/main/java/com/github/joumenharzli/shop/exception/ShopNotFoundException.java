@@ -20,7 +20,10 @@ package com.github.joumenharzli.shop.exception;
  *
  * @author Joumen Harzli
  */
-public class ShopNotFoundException extends RuntimeException {
+public class ShopNotFoundException extends EntityNotFoundException {
+
+  /* The error code for representing a shop that was not found */
+  public static final String ERROR_CODE = "error.shopNotFound";
 
   /**
    * Constructs a new runtime exception with the specified detail message.
@@ -34,4 +37,11 @@ public class ShopNotFoundException extends RuntimeException {
     super(message);
   }
 
+  /**
+   * @return the error code of the exception
+   */
+  @Override
+  public String getErrorCode() {
+    return ERROR_CODE;
+  }
 }

@@ -30,8 +30,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.github.joumenharzli.shop.exception.ProductNotFoundException;
-import com.github.joumenharzli.shop.exception.ShopNotFoundException;
+import com.github.joumenharzli.shop.exception.EntityNotFoundException;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
@@ -51,29 +50,16 @@ public class RestExceptionTranslator {
   }
 
   /**
-   * Handle Product Not Found
+   * Handle entity not found exception thrown by EntityNotFoundException
+   * or any exception that inherits from it
    *
-   * @return 404 status with message telling that the Product not found
+   * @return 404 status with message telling that the entity was not found
    */
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
-  @ExceptionHandler(value = ProductNotFoundException.class)
+  @ExceptionHandler(value = EntityNotFoundException.class)
   @ResponseBody
-  public RestErrorDto handleProductNotFound(ProductNotFoundException exception) {
-    String errorCode = RestErrorConstants.ERR_PRODUCT_NOT_FOUND_ERROR;
-    LOGGER.error(ERROR_MSG, errorCode, exception);
-    return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
-  }
-
-  /**
-   * Handle Shop Not Found
-   *
-   * @return 404 status with message telling that the Shop not found
-   */
-  @ResponseStatus(value = HttpStatus.NOT_FOUND)
-  @ExceptionHandler(value = ShopNotFoundException.class)
-  @ResponseBody
-  public RestErrorDto handleShopNotFound(ShopNotFoundException exception) {
-    String errorCode = RestErrorConstants.ERR_SHOP_NOT_FOUND_ERROR;
+  public RestErrorDto handleShopNotFound(EntityNotFoundException exception) {
+    String errorCode = exception.getErrorCode();
     LOGGER.error(ERROR_MSG, errorCode, exception);
     return new RestErrorDto(errorCode, getLocalizedMessageFromErrorCode(errorCode));
   }

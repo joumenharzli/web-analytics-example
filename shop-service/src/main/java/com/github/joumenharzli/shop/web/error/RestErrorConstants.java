@@ -24,8 +24,6 @@ public final class RestErrorConstants {
 
   public static final String ERR_INTERNAL_SERVER_ERROR = "error.internal";
   public static final String ERR_VALIDATION_ERROR = "error.validation";
-  public static final String ERR_SHOP_NOT_FOUND_ERROR = "error.shopNotFound";
-  public static final String ERR_PRODUCT_NOT_FOUND_ERROR = "error.productNotFound";
 
   private RestErrorConstants() {
   }
