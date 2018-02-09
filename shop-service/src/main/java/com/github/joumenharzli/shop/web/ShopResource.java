@@ -75,7 +75,6 @@ public class ShopResource {
    *
    * @return the ResponseEntity with status 200 (OK) and the list of the products that belongs to the the specified shop
    * or with status 404 (Not Found) if the shop was not found
-   * or with status 400 (Bad Request) if the id is not valid
    */
   @ApiOperation(notes = "Returns all the found products that belongs to the the specified shop using the id of the shop.",
       value = "Get all the products that belongs to the the specified shop",
