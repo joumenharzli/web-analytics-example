@@ -16,7 +16,7 @@
 package com.github.joumenharzli.shop.exception;
 
 /**
- * ShopNotFoundException
+ * Shop Not Found Exception
  *
  * @author Joumen Harzli
  */
