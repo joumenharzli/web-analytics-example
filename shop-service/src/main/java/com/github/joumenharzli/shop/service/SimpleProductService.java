@@ -15,9 +15,11 @@
 
 package com.github.joumenharzli.shop.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.persistence.Tuple;
 
 import org.slf4j.Logger;
@@ -27,10 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.domain.Shop;
+import com.github.joumenharzli.shop.domain.builder.ProductBuilder;
+import com.github.joumenharzli.shop.domain.builder.ShopBuilder;
 import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.exception.ShopNotFoundException;
 import com.github.joumenharzli.shop.repository.CustomShopRepository;
 import com.github.joumenharzli.shop.repository.ProductRepository;
+import com.github.joumenharzli.shop.repository.ShopRepository;
 import com.github.joumenharzli.shop.service.dto.ProductDTO;
 import com.github.joumenharzli.shop.service.dto.ProductSmallDTO;
 import com.github.joumenharzli.shop.service.dto.builder.ProductSmallDTOBuilder;
@@ -47,16 +53,33 @@ public class SimpleProductService implements ProductService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SimpleProductService.class);
 
+  private final ShopRepository shopRepository;
   private final ProductRepository productRepository;
   private final CustomShopRepository customShopRepository;
   private final ProductMapper productMapper;
 
-  public SimpleProductService(ProductRepository productRepository,
+  public SimpleProductService(ShopRepository shopRepository, ProductRepository productRepository,
                               CustomShopRepository customShopRepository,
                               ProductMapper productMapper) {
+    this.shopRepository = shopRepository;
     this.productRepository = productRepository;
     this.customShopRepository = customShopRepository;
     this.productMapper = productMapper;
+  }
+
+  @PostConstruct
+  public void init() {
+    Shop shopA = ShopBuilder.aShop().withName("Shop A").build();
+    Shop shopB = ShopBuilder.aShop().withName("Shop B").build();
+
+    shopA = shopRepository.saveAndFlush(shopA);
+    shopB = shopRepository.saveAndFlush(shopB);
+
+    Product productA = ProductBuilder.aProduct().withName("Product A").withPrice(1F).withQuantity(5L).withShop(shopA).build();
+    Product productB = ProductBuilder.aProduct().withName("Product B").withPrice(2F).withQuantity(5L).withShop(shopA).build();
+    Product productC = ProductBuilder.aProduct().withName("Product C").withPrice(3F).withQuantity(5L).withShop(shopB).build();
+
+    productRepository.save(Arrays.asList(productA, productB, productC));
   }
 
   /**

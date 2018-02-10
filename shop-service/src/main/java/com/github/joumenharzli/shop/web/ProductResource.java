@@ -15,6 +15,8 @@
 
 package com.github.joumenharzli.shop.web;
 
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.github.joumenharzli.shop.domain.Product;
+import com.github.joumenharzli.shop.service.AccessLogService;
 import com.github.joumenharzli.shop.service.ProductService;
 import com.github.joumenharzli.shop.service.dto.ProductDTO;
 import com.github.joumenharzli.shop.web.error.RestErrorDto;
@@ -44,9 +47,11 @@ public class ProductResource {
   private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
 
   private final ProductService productService;
+  private final AccessLogService accessLogService;
 
-  public ProductResource(ProductService productService) {
+  public ProductResource(ProductService productService, AccessLogService accessLogService) {
     this.productService = productService;
+    this.accessLogService = accessLogService;
   }
 
   /**
@@ -63,9 +68,11 @@ public class ProductResource {
   })
   @Timed
   @GetMapping("/products/{id}")
-  public ProductDTO getOneById(@PathVariable("id") String productId) {
+  public ProductDTO getOneById(@PathVariable("id") String productId, Principal principal) {
     LOGGER.debug("REST request to get the product having the id {}", productId);
-    return productService.findOneById(productId);
+    ProductDTO productDTO = productService.findOneById(productId);
+    accessLogService.logProductAccess(principal, productDTO);
+    return productDTO;
   }
 
 }

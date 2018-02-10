@@ -176,6 +176,7 @@ public class ApplicationProperties {
   public static class KafkaProperties {
 
     private List<String> bootstrapServers = Lists.newArrayList();
+    private int timeoutMs;
 
     public List<String> getBootstrapServers() {
       return bootstrapServers;
@@ -183,6 +184,14 @@ public class ApplicationProperties {
 
     public void setBootstrapServers(List<String> bootstrapServers) {
       this.bootstrapServers = bootstrapServers;
+    }
+
+    public int getTimeoutMs() {
+      return timeoutMs;
+    }
+
+    public void setTimeoutMs(int timeoutMs) {
+      this.timeoutMs = timeoutMs;
     }
   }
 

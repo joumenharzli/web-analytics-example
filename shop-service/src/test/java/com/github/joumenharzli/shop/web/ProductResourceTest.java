@@ -18,12 +18,17 @@ package com.github.joumenharzli.shop.web;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,6 +39,7 @@ import com.github.joumenharzli.shop.domain.builder.ProductBuilder;
 import com.github.joumenharzli.shop.exception.ProductNotFoundException;
 import com.github.joumenharzli.shop.repository.ProductRepository;
 import com.github.joumenharzli.shop.repository.ShopRepository;
+import com.github.joumenharzli.shop.service.KafkaAccessLogService;
 
 import static com.github.joumenharzli.shop.web.ShopResourceTest.createShop;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,7 +54,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ShopApplication.class)
 @AutoConfigureMockMvc
+@DirtiesContext
+@ActiveProfiles("test")
 public class ProductResourceTest {
+
+  @ClassRule
+  public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, KafkaAccessLogService.PRODUCT_ACCESS_LOG_TOPIC);
 
   @Autowired
   private MockMvc mockMvc;
@@ -73,6 +84,7 @@ public class ProductResourceTest {
   }
 
   @Test
+  @WithAnonymousUser
   public void shouldGetProductById() throws Exception {
     Shop shop = createShop(shopRepository);
     Product product = createProduct(shop, productRepository);

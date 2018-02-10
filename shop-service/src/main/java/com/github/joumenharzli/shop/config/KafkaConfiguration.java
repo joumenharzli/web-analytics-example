@@ -56,8 +56,9 @@ public class KafkaConfiguration {
   private Map<String, Object> producerConfiguration() {
     HashMap<String, Object> map = Maps.newHashMap();
     map.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, applicationProperties.getKafka().getBootstrapServers());
+    map.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, applicationProperties.getKafka().getTimeoutMs());
     map.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    map.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+    map.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
     return map;
   }
 }
