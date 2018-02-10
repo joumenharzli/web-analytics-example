@@ -48,6 +48,9 @@ spring:
   application:
     name: ${application.name}
 
+  jackson:
+    serialization.write-dates-as-timestamps: false
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:mem:shopdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
