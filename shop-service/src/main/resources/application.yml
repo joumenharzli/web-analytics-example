@@ -30,7 +30,7 @@ application:
     enabled: true
     auto-discovery: false
     backup-count: 1
-    time-to-live-seconds: 5
+    time-to-live-seconds: 600
 
   localization:
     enabled: true
@@ -76,6 +76,7 @@ spring:
         hibernate.cache.use_minimal_puts: true
         hibernate.cache.hazelcast.use_lite_member: true
         hibernate.cache.default_cache_concurrency_strategy: nonstrict-read-write
+        hibernate.cache.hazelcast.shutdown_on_session_factory_close: true
     hibernate:
       ddl-auto: create
       naming:

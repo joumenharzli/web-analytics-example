@@ -37,6 +37,7 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 @Entity
 @Table(name = "shops")
+@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Shop implements Serializable {
 
