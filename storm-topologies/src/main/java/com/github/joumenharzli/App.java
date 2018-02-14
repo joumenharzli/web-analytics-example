@@ -15,7 +15,7 @@
 
 package com.github.joumenharzli;
 
-import org.apache.storm.StormSubmitter;
+import org.apache.storm.LocalCluster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +38,13 @@ public class App {
    * @param args currently no args are needed
    */
   public static void main(String[] args) {
-    LOGGER.info("Submitting {} topology to storm", WEB_ANALYTICS_TOPOLOGY_NAME);
+    LOGGER.info("Submitting {} topology to local storm cluster", WEB_ANALYTICS_TOPOLOGY_NAME);
 
     try {
 
-      StormSubmitter.submitTopology(
+      LocalCluster cluster = new LocalCluster();
+
+      cluster.submitTopology(
           WEB_ANALYTICS_TOPOLOGY_NAME,
           createTopologyConfiguration(),
           createTopology());
