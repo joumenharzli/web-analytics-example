@@ -33,12 +33,12 @@ public class ProductAccessLog implements Serializable {
 
   private String productId;
 
-  private Instant accessTimestamp;
+  private String accessTimestamp;
 
   public ProductAccessLog(String userId, String productId) {
     this.userId = userId;
     this.productId = productId;
-    this.accessTimestamp = Instant.now();
+    this.accessTimestamp = Instant.now().toString();
   }
 
   public String getUserId() {
@@ -57,11 +57,11 @@ public class ProductAccessLog implements Serializable {
     this.productId = productId;
   }
 
-  public Instant getAccessTimestamp() {
+  public String getAccessTimestamp() {
     return accessTimestamp;
   }
 
-  public void setAccessTimestamp(Instant accessTimestamp) {
+  public void setAccessTimestamp(String accessTimestamp) {
     this.accessTimestamp = accessTimestamp;
   }
 
