@@ -64,7 +64,7 @@ public final class WebAnalyticsTopology {
   public static Config createTopologyConfiguration() {
     Config config = new Config();
     config.setDebug(ENABLE_DEBUGGING);
-    config.setNumWorkers(WEB_ANALYTICS_WORKERS_COUNT);
+    config.setMaxTaskParallelism(WEB_ANALYTICS_WORKERS_COUNT);
     return config;
   }
 

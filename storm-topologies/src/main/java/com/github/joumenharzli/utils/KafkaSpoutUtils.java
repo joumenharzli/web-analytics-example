@@ -50,7 +50,7 @@ public final class KafkaSpoutUtils {
     LOGGER.debug("Creating a new kafka spout that will subscribe to the topic {}", topicName);
 
     SpoutConfig kafkaConfig = new SpoutConfig(
-        new ZkHosts(KAFKA_ZOOKEEPER_HOST), topicName, "/kafka", "kafka-spout");
+        new ZkHosts(KAFKA_ZOOKEEPER_HOST), topicName, "/kafka", "kafkaSpout");
 
     kafkaConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
 
