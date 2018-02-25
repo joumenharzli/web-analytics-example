@@ -16,6 +16,7 @@ This example requires:
 * Apache Kafka 0.11.0.2
 * Apache Cassandra 2.2.11
 * Apache Storm 1.1.1
+* Apache Spark 2.2.1
 
 ### Configuration (currently)
 * Access logs in the example are broadcasted via the topic <b>product-access-topic</b>. So you need to create it in Kafka.
@@ -33,6 +34,8 @@ create table products_views_by_timestamp (productId text, timestamp timestamp, c
 
 create table products_views_by_user (productId text, userId text, timestamp timestamp, count counter, primary key (userId, productId,timestamp) ) WITH CLUSTERING ORDER BY (productId desc);
 
+create table product_recommendations(userId text, productId text, rating double , timestamp timestamp, primary key ((userId, productId),timestamp) ) WITH CLUSTERING ORDER BY (timestamp desc)
+
 ```
 
 ### Then what ? (currently)
@@ -41,7 +44,10 @@ create table products_views_by_user (productId text, userId text, timestamp time
 * A message will be boardcasted to Kafka wich holds the access log of the product
 * Apache Storm will parse the received data from Kafka then process them and saves the results in Cassandra
 * Check Cassandra to see the processed data
+* Now you can launch Spark, which should be preferably scheduled to run every a defined period of time, this will insert recommendations of products for users using the ALS algorithm. the higher the value of the rating is the more likely the use will love the product.
+* Check Cassandra to see the processed data
 
 ### Results (currently)
 * You can check that everything is working by viewing data in Cassandra
 <img src="https://image.ibb.co/eKGZ87/cassandra_finished.png" />
+<img src="https://image.ibb.co/jUqxVx/recommendation.png" />
