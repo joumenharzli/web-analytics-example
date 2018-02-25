@@ -45,7 +45,7 @@ public class ProductViewsCountByUserBolt extends BaseBasicBolt {
     String daysMonthYearTimestamp = input.getString(input.fieldIndex(ACCESS_TIMESTAMP_WITHOUT_HOURS_MINUTES_SECONDS));
 
     CassandraUtils.execute(WEB_ANALYTICS_KEYSPACE,
-        String.format("update products_views_by_user set count=count+1 where productId='%s' and timestamp='%s' and userId='%s'",
+        String.format("update products_views_by_user set count=count+1 where productid='%s' and timestamp='%s' and userid='%s'",
             productId, daysMonthYearTimestamp, userId));
 
   }
